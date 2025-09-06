@@ -1,160 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Duckle — Year 8 Dashboard</title>
   <style>
-    :root {
-      --bg: #0a0a0f;
-      --card-bg: rgba(20, 20, 30, 0.6);
-      --text: #fff;
-      --muted: #aaa;
-      --radius: 16px;
-      --shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-      --blur: blur(12px);
+    :root{
+      --bg:#0a0a0f;
+      --card-bg:rgba(20,20,30,0.6);
+      --text:#fff;
+      --muted:#aaa;
+      --radius:18px;
+      --shadow:0 8px 24px rgba(0,0,0,0.5);
+      --blur:blur(12px);
+      --timetable:#ff6b6b;
+      --maths:#4d96ff;
+      --english:#5cb85c;
+      --science:#9775fa;
+      --history:#f39c12;
+      --geography:#3498db;
+      --re:#e74c3c;
+      --coding:#00c2a8;
+      --art:#ff6bd6;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Inter", Segoe UI, Roboto, system-ui, -apple-system, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    /* Subtle animated background */
+    body::before{
+      content:"";
+      position:fixed; inset:0; z-index:-1;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(124,109,242,0.25), transparent 70%),
+        radial-gradient(circle at 80% 70%, rgba(53,176,255,0.25), transparent 70%),
+        radial-gradient(circle at 50% 50%, rgba(255,107,214,0.2), transparent 70%);
+      animation:floatbg 20s infinite alternate ease-in-out;
+    }
+    @keyframes floatbg{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-40px) scale(1.05)}}
 
-      --timetable: #ff6b6b;
-      --maths: #4d96ff;
-      --english: #5cb85c;
-      --science: #9775fa;
-      --history: #f39c12;
-      --geography: #3498db;
-      --re: #e74c3c;
-      --coding: #00c2a8;
-      --art: #ff6bd6;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Inter", Segoe UI, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-    
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at 20% 30%, rgba(124,109,242,0.25), transparent 70%),
-                  radial-gradient(circle at 80% 70%, rgba(53,176,255,0.25), transparent 70%),
-                  radial-gradient(circle at 50% 50%, rgba(255,107,214,0.2), transparent 70%);
-      animation: floatbg 20s infinite alternate ease-in-out;
-      z-index: -1;
-    }
-    @keyframes floatbg {
-      0% { transform: translateY(0px) scale(1); }
-      100% { transform: translateY(-40px) scale(1.05); }
-    }
-
-   /* Full-width “workspace” canvas */
-.container {
-  width: 100%;
-  max-width: none;
-  margin: 0 auto;
-  padding: 24px clamp(16px, 4vw, 48px);
-}
-
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px; border-radius: var(--radius);
-      background: linear-gradient(135deg, #111, #1a1a2e);
-      box-shadow: var(--shadow); margin-bottom: 24 pxposition: sticky; top: 0; z-index: 10;
-;
-    }
-    .logo { display: flex; align-items: center; gap: 12px; }
-    .logo svg { width: 50px; height: 50px; filter: drop-shadow(0 0 10px #fff); }
-    .welcome { text-align: right; }
-    .clock { font-size: 20px; font-weight: 700; }
-    .date { font-size: 14px; color: var(--muted); }
-
-    /* Wider grid and horizontal scroll if content overflows */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  overflow-x: auto;                /* allows wide canvas on Chromebook */
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;   /* nicer horizontal scrolling feel */
-  padding-bottom: 6px;             /* space for scrollbar if it appears */
-}
-.card { scroll-snap-align: start; }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 20px;
-      backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur);
-      box-shadow: var(--shadow);
-      transition: transform 0.3s, box-shadow 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::after {
-      content: "";
-      position: absolute;
-      top: -50%; left: -50%; width: 200%; height: 200%;
-      background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.05), transparent 30%);
-      animation: rotate 8s linear infinite;
-      pointer-events: none;
-    }
-    @keyframes rotate { to { transform: rotate(360deg); } }
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 0 25px rgba(255,255,255,0.3);
-    }
-    .card h3 { margin-top: 0; margin-bottom: 10px; }
-    .btn {
-      display: inline-block; padding: 10px 16px; margin-top: 12px;
-      border-radius: 12px; font-weight: 600; text-decoration: none; color: #fff;
-      transition: all 0.3s; position: relative;
-    }
-    .btn:hover { filter: brightness(1.3); box-shadow: 0 0 18px currentColor; }
-
-    .timetable { background: var(--timetable); }
-    .maths { background: var(--maths); }
-    .english { background: var(--english); }
-    .science { background: var(--science); }
-    .history { background: var(--history); }
-    .geography { background: var(--geography); }
-    .re { background: var(--re); }
-    .coding { background: var(--coding); }
-    .art { background: var(--art); }
-
-    .quote {
-      font-size: 18px; font-style: italic; text-align: center;
-      margin: 0 0 20px; padding: 20px;
-      border-left: 4px solid var(--maths);
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius);
-      box-shadow: inset 0 0 20px rgba(77,150,255,0.3);
-      animation: glow 4s infinite alternate;
-    }
-    @keyframes glow {
-      from { box-shadow: inset 0 0 10px rgba(77,150,255,0.2); }
-      to { box-shadow: inset 0 0 25px rgba(77,150,255,0.6); }
+    /* Full-width “workspace” canvas */
+    .container{
+      width:100%;
+      max-width:none;
+      margin:0 auto;
+      padding:24px clamp(16px,4vw,48px);
     }
 
-    .timer-display { font-size: 36px; font-weight: 700; text-align: center; margin: 10px 0 20px; text-shadow: 0 0 10px #4d96ff; }
-    .timer-buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    .timer-buttons button {
-      flex: 1 1 100px; padding: 10px; border: none; border-radius: 12px;
-      font-weight: 600; cursor: pointer; background: #222; color: white;
-      transition: all 0.3s; text-shadow: 0 0 6px #000;
+    /* App bar */
+    header{
+      position:sticky; top:0; z-index:10;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 20px;
+      border-radius:18px;
+      background:linear-gradient(135deg,#111,#1a1a2e);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,0.06);
+      backdrop-filter:saturate(120%) blur(8px);
+      margin-bottom:24px;
     }
-    .timer-buttons button:hover { background: #4d96ff; box-shadow: 0 0 15px #4d96ff; }
+    .logo{display:flex; align-items:center; gap:12px}
+    .logo svg{width:80px; height:80px; filter:drop-shadow(0 0 10px #fff)}
+    .welcome{text-align:right}
+    .clock{font-size:20px; font-weight:700}
+    .date{font-size:14px; color:var(--muted)}
 
-    footer { margin-top: 40px; text-align: center; font-size: 14px; color: var(--muted); }
+    /* Grid: wide & scrollable horizontally if it overflows */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+      gap:24px;
+      overflow-x:auto;
+      overscroll-behavior-x:contain;
+      scroll-snap-type:x proximity;
+      padding-bottom:6px;
+    }
+    .card{scroll-snap-align:start}
+
+    .card{
+      background:var(--card-bg);
+      border-radius:var(--radius);
+      padding:20px;
+      backdrop-filter:var(--blur);
+      -webkit-backdrop-filter:var(--blur);
+      box-shadow:var(--shadow);
+      transition:transform .3s, box-shadow .3s;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.06);
+    }
+    .card::after{
+      content:"";
+      position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+      background:conic-gradient(from 0deg, transparent, rgba(255,255,255,0.05), transparent 30%);
+      animation:rotate 8s linear infinite; pointer-events:none;
+    }
+    @keyframes rotate{to{transform:rotate(360deg)}}
+    .card:hover{transform:translateY(-6px) scale(1.02); box-shadow:0 0 25px rgba(255,255,255,0.25)}
+    .card h3{margin:0 0 10px; font-size:18px}
+
+    .btn{
+      display:inline-block; padding:10px 16px; margin-top:12px;
+      border-radius:12px; font-weight:600; text-decoration:none; color:#fff;
+      transition:all .3s; position:relative;
+    }
+    .btn:hover{filter:brightness(1.3); box-shadow:0 0 18px currentColor}
+
+    /* Subject labels */
+    .timetable{background:var(--timetable)} .maths{background:var(--maths)}
+    .english{background:var(--english)} .science{background:var(--science)}
+    .history{background:var(--history)} .geography{background:var(--geography)}
+    .re{background:var(--re)} .coding{background:var(--coding)} .art{background:var(--art)}
+
+    .quote{
+      font-size:18px; font-style:italic; text-align:center;
+      margin:0 0 20px; padding:20px;
+      border-left:4px solid var(--maths);
+      background:rgba(255,255,255,0.05);
+      border-radius:var(--radius);
+      box-shadow:inset 0 0 20px rgba(77,150,255,0.3);
+      animation:glow 4s infinite alternate;
+    }
+    @keyframes glow{from{box-shadow:inset 0 0 10px rgba(77,150,255,0.2)} to{box-shadow:inset 0 0 25px rgba(77,150,255,0.6)}}
+
+    .timer-display{font-size:36px; font-weight:700; text-align:center; margin:10px 0 20px; text-shadow:0 0 10px #4d96ff}
+    .timer-buttons{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+    .timer-buttons button{
+      flex:1 1 120px; padding:10px; border:none; border-radius:12px;
+      font-weight:600; cursor:pointer; background:#222; color:#fff;
+      transition:all .3s; text-shadow:0 0 6px #000;
+    }
+    .timer-buttons button:hover{background:#4d96ff; box-shadow:0 0 15px #4d96ff}
+
+    /* Music player controls */
+    .player-controls{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:12px}
+    .player-btn{padding:8px 12px; border:none; border-radius:10px; background:#222; color:#fff; cursor:pointer}
+    .player-btn:hover{background:#365e9a}
+
+    footer{margin:40px 0 10px; text-align:center; font-size:14px; color:var(--muted)}
   </style>
 </head>
 <body>
   <div class="container">
     <header>
       <div class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white">
+        <!-- White-on-black duck -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="white" aria-label="Duckle logo">
           <circle cx="36" cy="20" r="10"/>
           <ellipse cx="24" cy="34" rx="18" ry="10"/>
           <circle cx="40" cy="18" r="2.5" fill="#000"/>
@@ -171,19 +168,21 @@
 
     <div class="quote" id="quote">Loading daily quote...</div>
 
+    <!-- Subjects grid -->
     <div class="grid">
-      <div class="card"><h3>📅 Timetable Creator</h3><a class="btn timetable" href="https://chatgpt.com/g/g-68186d9b53c88191b4c1679b3cdde79d-key-stage-3-time-table-creator" target="_blank">Open App</a></div>
-      <div class="card"><h3>🧮 Maths Professor</h3><a class="btn maths" href="https://chatgpt.com/g/g-6818b01fa2148191a00736709cc1b201-maths-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>📚 English Professor</h3><a class="btn english" href="https://chatgpt.com/g/g-6818b3c0f8b08191993890fefe06b14c-english-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>🔬 Science Professor</h3><a class="btn science" href="https://chatgpt.com/g/g-6818b85a57b88191a771c282fc34f522-science-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>🏛 History Professor</h3><a class="btn history" href="https://chatgpt.com/g/g-6818c7ec77148191a61bffdf6b3b9100-history-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>🌍 Geography Professor</h3><a class="btn geography" href="https://chatgpt.com/g/g-6818cb025ef08191902e6ca40ebf1fa0-geography-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>🕊 RE Professor</h3><a class="btn re" href="https://chatgpt.com/g/g-6818cd1d62808191a4f81fa61f5b3584-re-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>💻 Coding Professor</h3><a class="btn coding" href="https://chatgpt.com/g/g-68bc5705597c8191b0bfae3c763f8826-coding-professor" target="_blank">Open App</a></div>
-      <div class="card"><h3>🎨 Art Professor</h3><a class="btn art" href="https://chatgpt.com/g/g-68bc59e11a7c8191ae2f7a9bfb79d91d-art-professor" target="_blank">Open App</a></div>
+      <div class="card"><h3>📅 Timetable Creator</h3><a class="btn timetable" href="https://chatgpt.com/g/g-68186d9b53c88191b4c1679b3cdde79d-key-stage-3-time-table-creator" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>🧮 Maths Professor</h3><a class="btn maths" href="https://chatgpt.com/g/g-6818b01fa2148191a00736709cc1b201-maths-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>📚 English Professor</h3><a class="btn english" href="https://chatgpt.com/g/g-6818b3c0f8b08191993890fefe06b14c-english-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>🔬 Science Professor</h3><a class="btn science" href="https://chatgpt.com/g/g-6818b85a57b88191a771c282fc34f522-science-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>🏛 History Professor</h3><a class="btn history" href="https://chatgpt.com/g/g-6818c7ec77148191a61bffdf6b3b9100-history-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>🌍 Geography Professor</h3><a class="btn geography" href="https://chatgpt.com/g/g-6818cb025ef08191902e6ca40ebf1fa0-geography-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>🕊 RE Professor</h3><a class="btn re" href="https://chatgpt.com/g/g-6818cd1d62808191a4f81fa61f5b3584-re-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>💻 Coding Professor</h3><a class="btn coding" href="https://chatgpt.com/g/g-68bc5705597c8191b0bfae3c763f8826-coding-professor" target="_blank" rel="noopener">Open App</a></div>
+      <div class="card"><h3>🎨 Art Professor</h3><a class="btn art" href="https://chatgpt.com/g/g-68bc59e11a7c8191ae2f7a9bfb79d91d-art-professor" target="_blank" rel="noopener">Open App</a></div>
     </div>
 
-    <div class="card" style="margin-top: 30px;">
+    <!-- Lesson timer -->
+    <div class="card" style="margin-top:30px;">
       <h3>⏱ Lesson Timer</h3>
       <div class="timer-display" id="timer">00:00</div>
       <div class="timer-buttons">
@@ -196,11 +195,33 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top: 30px;">
-      <h3>🎵 Break Zone</h3>
-      <p><a href="https://www.youtube.com/watch?v=jfKfPfyJRdk" target="_blank">🎶 Lofi Study Music</a></p>
-      <p><a href="https://www.youtube.com/watch?v=OdIJ2x3nxzQ" target="_blank">🌱 Relaxing Nature Sounds</a></p>
-      <p><a href="https://www.youtube.com/@kurzgesagt" target="_blank">🎬 Educational Videos</a></p>
+    <!-- Music Player -->
+    <div class="card" style="margin-top:30px;">
+      <h3>🎧 Music Player</h3>
+      <p style="margin-top:0">Play background music without leaving Duckle.</p>
+      <div class="player-controls">
+        <button onclick="setPlayer('jfKfPfyJRdk')" class="player-btn">Lofi Girl</button>
+        <button onclick="setPlayer('5qap5aO4i9A')" class="player-btn">Chillhop Radio</button>
+        <button onclick="setPlayer('Dx5qFachd3A')" class="player-btn">Jazz Café</button>
+        <button onclick="setPlayer('hHW1oY26kxQ')" class="player-btn">Ambient Focus</button>
+        <button onclick="setPlayer('OdIJ2x3nxzQ')" class="player-btn">Nature Sounds</button>
+        <button onclick="setPlayer('wp43OdtAAkM')" class="player-btn">Classical Piano</button>
+      </div>
+      <!-- Custom URL input -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin:10px 0 12px;">
+        <span style="background:#1f2635;color:#cfe3ff;border:1px solid rgba(255,255,255,0.08);padding:6px 10px;border-radius:999px;font-size:12px;">Custom YouTube URL</span>
+        <input id="ytUrl" type="text" placeholder="Paste any YouTube URL (video or livestream)"
+               style="flex:1;min-width:260px;max-width:560px;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:#111723;color:#e8f0ff;" />
+        <button onclick="playCustomUrl()" style="padding:8px 12px;border:none;border-radius:10px;background:#365e9a;color:#fff;cursor:pointer;">Play</button>
+      </div>
+      <div style="position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,0.5);">
+        <iframe id="yt-player" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&modestbranding=1&rel=0"
+                title="YouTube player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
     </div>
 
     <footer>
@@ -209,156 +230,123 @@
   </div>
 
   <script>
-(function(){
-  // ----- Clock & Greeting -----
-  function updateClock(){
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const clockEl = document.getElementById('clock');
-    const dateEl  = document.getElementById('date');
-    const greetEl = document.getElementById('greeting');
-    if(clockEl) clockEl.textContent = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    if(dateEl)  dateEl.textContent  = now.toLocaleDateString('en-GB', options);
-    const h = now.getHours();
-    const greet = h < 12 ? 'Good Morning, Isla 👋' : h < 18 ? 'Good Afternoon, Isla 👋' : 'Good Evening, Isla 👋';
-    if(greetEl) greetEl.textContent = greet;
-  }
-  setInterval(updateClock, 1000); updateClock();
-
-  // ----- Daily Quotes (60+) -----
-  const quotes = [
-    "Every expert was once a beginner.",
-    "Discipline is the bridge between goals and accomplishment.",
-    "Small steps every day lead to big results.",
-    "Learning never exhausts the mind.",
-    "Believe you can and you're halfway there.",
-    "Focus on progress, not perfection.",
-    "Success is the sum of small efforts repeated daily.",
-    "Dream big, work hard, stay focused.",
-    "Knowledge is power.",
-    "The future depends on what you do today.",
-    "Difficult roads lead to beautiful destinations.",
-    "Mistakes are proof you are trying.",
-    "Perseverance makes the difference.",
-    "Your attitude determines your direction.",
-    "Stay curious, keep learning.",
-    "Great things take time.",
-    "Push yourself, no one else will do it for you.",
-    "Education is the most powerful weapon.",
-    "Success doesn’t come to you, you go to it.",
-    "Hard work beats talent when talent doesn’t work hard.",
-    "Consistency is key.",
-    "Winners are not people who never fail but who never quit.",
-    "Do something today that your future self will thank you for.",
-    "Don’t watch the clock; do what it does. Keep going.",
-    "A little progress each day adds up to big results.",
-    "You are capable of amazing things.",
-    "Work hard in silence, let success make the noise.",
-    "Stay positive, work hard, make it happen.",
-    "The best way to predict your future is to create it.",
-    "Education is the passport to the future.",
-    "Start where you are. Use what you have. Do what you can.",
-    "Opportunities don’t happen, you create them.",
-    "Don’t stop until you’re proud.",
-    "You don’t have to be great to start, but you have to start to be great.",
-    "The secret of getting ahead is getting started.",
-    "Believe in yourself and all that you are.",
-    "Success is not final, failure is not fatal.",
-    "Stay focused and never give up.",
-    "Your limitation—it’s only your imagination.",
-    "Dream it. Wish it. Do it.",
-    "Success doesn’t just find you. You have to go out and get it.",
-    "The harder you work for something, the greater you’ll feel when you achieve it.",
-    "Don’t wait for opportunity. Create it.",
-    "The key to success is to focus on goals, not obstacles.",
-    "Doubt kills more dreams than failure ever will.",
-    "Push harder than yesterday if you want a different tomorrow.",
-    "If you can dream it, you can do it.",
-    "Success is liking yourself, liking what you do, and liking how you do it.",
-    "Learning is a treasure that will follow its owner everywhere.",
-    "Your only limit is your mind.",
-    "Focus, discipline, and consistency create success.",
-    "Great achievements begin with small steps.",
-    "Failure is not the opposite of success; it’s part of success.",
-    "Energy and persistence conquer all things.",
-    "Work smart, not just hard.",
-    "Action is the foundational key to success.",
-    "The way to get started is to quit talking and begin doing.",
-    "Practice makes progress.",
-    "Curiosity is the engine of achievement.",
-    "Your future is created by what you do today, not tomorrow.",
-    "Be stubborn about goals and flexible about methods.",
-    "Tiny habits build giant outcomes.",
-    "Read, think, build—repeat.",
-    "Effort compounds.",
-    "Confidence comes from competence—practice it.",
-    "Do the hard things first.",
-    "One hour today beats ten someday.",
-    "You learn more by doing than by waiting.",
-    "Make it simple. Make it happen.",
-    "Direction is more important than speed."
-  ];
-  function showQuote(){
-    const start = new Date(new Date().getFullYear(),0,0); // Jan 0 for day-of-year math
-    const dayOfYear = Math.floor((Date.now() - start.getTime())/86400000);
-    const el = document.getElementById('quote');
-    if(el) el.textContent = quotes[dayOfYear % quotes.length];
-  }
-  showQuote();
-
-  // ----- Lesson Timer & Stopwatch -----
-  let timerInterval = null;
-  let remaining = 0; // seconds
-  let stopwatch = false;
-
-  function renderTimer(){
-    const m = Math.floor(remaining/60);
-    const s = remaining % 60;
-    const el = document.getElementById('timer');
-    if(el) el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  }
-
-  function tick(){
-    if(!stopwatch){
-      remaining--;
-      if(remaining <= 0){
-        remaining = 0;
-        clearInterval(timerInterval);
-        renderTimer();
-        try{ alert("⏰ Time's up!"); }catch(e){}
-        return;
-      }
-    } else {
-      remaining++;
+  (function(){
+    // Clock, date, greeting (UK)
+    function updateClock(){
+      const now = new Date();
+      const options = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+      document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('date').textContent  = now.toLocaleDateString('en-GB', options);
+      const h = now.getHours();
+      const greet = h < 12 ? "Good Morning, Isla 👋" : h < 18 ? "Good Afternoon, Isla 👋" : "Good Evening, Isla 👋";
+      document.getElementById('greeting').textContent = greet;
     }
-    renderTimer();
-  }
+    setInterval(updateClock, 1000); updateClock();
 
-  window.startTimer = function(minutes){
-    clearInterval(timerInterval);
-    stopwatch = false;
-    remaining = Math.max(1, Math.floor(minutes*60));
-    renderTimer();
-    timerInterval = setInterval(tick, 1000);
-  }
+    // 50+ quotes (day-of-year rotation)
+    const quotes = [
+      "Every expert was once a beginner.",
+      "Discipline is the bridge between goals and accomplishment.",
+      "Small steps every day lead to big results.",
+      "Learning never exhausts the mind.",
+      "Believe you can and you're halfway there.",
+      "Focus on progress, not perfection.",
+      "Success is the sum of small efforts repeated daily.",
+      "Dream big, work hard, stay focused.",
+      "Knowledge is power.",
+      "The future depends on what you do today.",
+      "Difficult roads lead to beautiful destinations.",
+      "Mistakes are proof you are trying.",
+      "Perseverance makes the difference.",
+      "Your attitude determines your direction.",
+      "Stay curious, keep learning.",
+      "Great things take time.",
+      "Push yourself, no one else will do it for you.",
+      "Education is the most powerful weapon.",
+      "Success doesn’t come to you, you go to it.",
+      "Hard work beats talent when talent doesn’t work hard.",
+      "Consistency is key.",
+      "Winners are not people who never fail but who never quit.",
+      "Do something today that your future self will thank you for.",
+      "Don’t watch the clock; do what it does. Keep going.",
+      "A little progress each day adds up to big results.",
+      "You are capable of amazing things.",
+      "Work hard in silence, let success make the noise.",
+      "Stay positive, work hard, make it happen.",
+      "The best way to predict your future is to create it.",
+      "Education is the passport to the future.",
+      "Start where you are. Use what you have. Do what you can.",
+      "Opportunities don’t happen, you create them.",
+      "Don’t stop until you’re proud.",
+      "You don’t have to be great to start, but you have to start to be great.",
+      "The secret of getting ahead is getting started.",
+      "Believe in yourself and all that you are.",
+      "Success is not final, failure is not fatal.",
+      "Stay focused and never give up.",
+      "Your limitation—it’s only your imagination.",
+      "Dream it. Wish it. Do it.",
+      "Success doesn’t just find you. You have to go out and get it.",
+      "The harder you work for something, the greater you’ll feel when you achieve it.",
+      "Don’t wait for opportunity. Create it.",
+      "The key to success is to focus on goals, not obstacles.",
+      "Doubt kills more dreams than failure ever will.",
+      "Push harder than yesterday if you want a different tomorrow.",
+      "If you can dream it, you can do it.",
+      "Success is liking yourself, liking what you do, and liking how you do it.",
+      "Learning is a treasure that will follow its owner everywhere.",
+      "Your only limit is your mind."
+    ];
+    function showQuote(){
+      const start = new Date(new Date().getFullYear(),0,0);
+      const dayOfYear = Math.floor((Date.now() - start.getTime())/86400000);
+      document.getElementById('quote').textContent = quotes[dayOfYear % quotes.length];
+    }
+    showQuote();
 
-  window.startStopwatch = function(){
-    clearInterval(timerInterval);
-    stopwatch = true;
-    remaining = 0;
-    renderTimer();
-    timerInterval = setInterval(tick, 1000);
-  }
+    // Timer & Stopwatch
+    let timerInterval = null, remaining = 0, stopwatch = false;
+    function renderTimer(){
+      const m = Math.floor(remaining/60), s = remaining % 60;
+      document.getElementById('timer').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+    function tick(){
+      if(!stopwatch){
+        remaining--;
+        if(remaining <= 0){ remaining = 0; clearInterval(timerInterval); renderTimer(); try{ alert("⏰ Time's up!"); }catch(e){} return; }
+      }else{
+        remaining++;
+      }
+      renderTimer();
+    }
+    window.startTimer = function(min){ clearInterval(timerInterval); stopwatch=false; remaining=Math.max(1,Math.floor(min*60)); renderTimer(); timerInterval=setInterval(tick,1000); }
+    window.startStopwatch = function(){ clearInterval(timerInterval); stopwatch=true; remaining=0; renderTimer(); timerInterval=setInterval(tick,1000); }
+    window.pauseTimer = function(){ clearInterval(timerInterval); }
+    window.resetTimer = function(){ clearInterval(timerInterval); stopwatch=false; remaining=0; renderTimer(); }
 
-  window.pauseTimer = function(){
-    clearInterval(timerInterval);
-  }
-
-  window.resetTimer = function(){
-    clearInterval(timerInterval);
-    stopwatch = false;
-    remaining = 0;
-    renderTimer();
-  }
-})();
-</script>
+    // Music player helpers
+    window.setPlayer = function(videoId){
+      const iframe = document.getElementById('yt-player');
+      if(!iframe) return;
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`;
+    };
+    function extractYouTubeId(url){
+      try{
+        const u = new URL(url);
+        if(u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+        if(u.searchParams.get('v')) return u.searchParams.get('v');
+        const parts = u.pathname.split('/');
+        const idx = parts.indexOf('embed');
+        if(idx !== -1 && parts[idx+1]) return parts[idx+1];
+      }catch(e){}
+      return null;
+    }
+    window.playCustomUrl = function(){
+      const input = document.getElementById('ytUrl');
+      if(!input || !input.value) return;
+      const id = extractYouTubeId(input.value.trim());
+      if(id){ window.setPlayer(id); } else { alert('That does not look like a valid YouTube URL.'); }
+    };
+  })();
+  </script>
+</body>
+</html>
